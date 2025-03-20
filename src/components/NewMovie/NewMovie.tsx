@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { TextField } from '../TextField';
 import { Movie } from '../../types/Movie';
 
@@ -7,7 +7,7 @@ type Props = {
 };
 
 export const NewMovie: React.FC<Props> = ({ onAdd }) => {
-  const [count, setCount] = useState(0);
+  const countRef = useRef(0);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [imgUrl, setImgUrl] = useState('');
@@ -15,28 +15,22 @@ export const NewMovie: React.FC<Props> = ({ onAdd }) => {
   const [imdbId, setImdbId] = useState('');
 
   const formFieldHandler = (field: string, value: string) => {
-    if (field) {
-      switch (field) {
-        case 'title':
-          setTitle(value);
-          break;
-
-        case 'description':
-          setDescription(value);
-          break;
-
-        case 'imgUrl':
-          setImgUrl(value);
-          break;
-
-        case 'imdbUrl':
-          setImdbUrl(value);
-          break;
-
-        case 'imdbId':
-          setImdbId(value);
-          break;
-      }
+    switch (field) {
+      case 'title':
+        setTitle(value);
+        break;
+      case 'description':
+        setDescription(value);
+        break;
+      case 'imgUrl':
+        setImgUrl(value);
+        break;
+      case 'imdbUrl':
+        setImdbUrl(value);
+        break;
+      case 'imdbId':
+        setImdbId(value);
+        break;
     }
   };
 
@@ -59,7 +53,7 @@ export const NewMovie: React.FC<Props> = ({ onAdd }) => {
       };
 
       onAdd(newMovie);
-      setCount(count + 1);
+      countRef.current += 1;
 
       setTitle('');
       setDescription('');
@@ -70,7 +64,7 @@ export const NewMovie: React.FC<Props> = ({ onAdd }) => {
   };
 
   return (
-    <form className="NewMovie" key={count} onSubmit={submitHandler}>
+    <form className="NewMovie" key={countRef.current} onSubmit={submitHandler}>
       <h2 className="title">Add a movie</h2>
 
       <TextField
@@ -118,7 +112,7 @@ export const NewMovie: React.FC<Props> = ({ onAdd }) => {
             type="submit"
             data-cy="submit-button"
             className="button is-link"
-            disabled={!isFilled ? true : false}
+            disabled={!isFilled}
           >
             Add
           </button>
